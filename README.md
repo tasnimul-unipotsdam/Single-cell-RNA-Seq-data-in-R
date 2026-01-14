@@ -30,4 +30,8 @@ Scatter Plots: Gene-gene correlation analysis with linear regression.
 Ensure you have the following R packages installed:
 
 ```R
-install.packages(c("tidyverse", "Seurat", "ggpubr", "ggplot2", "hdf5r"))
+# Install CRAN packages
+install.packages(c("tidyverse", "Seurat", "ggpubr", "ggplot2", "hdf5r", "devtools"))
+
+# Install DoubletFinder from GitHub
+devtools::install_github('chris-mcginnis-ucsf/DoubletFinder')
