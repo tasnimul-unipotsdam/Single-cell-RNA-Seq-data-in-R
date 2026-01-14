@@ -12,6 +12,8 @@ Dimensionality Reduction: PCA and UMAP visualization.
 
 Clustering: Graph-based clustering at multiple resolutions (0.1 to 1.0).
 
+Doublet Detection & Quality Control: It ensures that clusters represent single cells rather than "multiplets" or "doublets" (two or more cells captured in one droplet).
+
 ## 2. Visualization & Statistics
 The visualize-gene-expression.R script provides publication-ready plots:
 
