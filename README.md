@@ -24,3 +24,10 @@ Density Plots: Tissue-specific expression distributions.
 Heatmaps: Multi-gene expression patterns across samples.
 
 Scatter Plots: Gene-gene correlation analysis with linear regression.
+
+### Prerequisites
+
+Ensure you have the following R packages installed:
+
+```R
+install.packages(c("tidyverse", "Seurat", "ggpubr", "ggplot2", "hdf5r"))
