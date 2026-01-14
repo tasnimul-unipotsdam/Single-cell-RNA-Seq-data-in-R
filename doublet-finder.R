@@ -9,9 +9,9 @@ library(DoubletFinder)
 
 # 1. Load Data -------------------------------------------------------------
 # Provide paths to your matrix, features, and barcodes files
-cts <- ReadMtx(mtx = 'path/to/matrix.mtx.gz',
-               features = 'path/to/features.tsv.gz',
-               cells = 'path/to/barcodes.tsv.gz')
+cts <- ReadMtx(mtx = 'data/matrix.mtx.gz',
+               features = 'data/features.tsv.gz',
+               cells = 'data/barcodes.tsv.gz')
 
 # Initialize Seurat object
 sc_obj <- CreateSeuratObject(counts = cts)
