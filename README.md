@@ -12,7 +12,7 @@ Dimensionality Reduction: PCA and UMAP visualization.
 
 Clustering: Graph-based clustering at multiple resolutions (0.1 to 1.0).
 
-2. Visualization & Statistics
+## 2. Visualization & Statistics
 The visualize-gene-expression.R script provides publication-ready plots:
 
 Violin & Boxplots: Includes automated p-value brackets and significance stars using ggpubr.
