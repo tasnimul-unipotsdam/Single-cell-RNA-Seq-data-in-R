@@ -1,61 +1,81 @@
-# script to visualize gene expression data (GSE183947)
-# setwd("~/Desktop/demo/data_manipulation_R/scripts")
+# script to visualize gene expression data
+# Updated with generic variable names and automated statistics
 
-# load libraries
+# Load libraries
 library(tidyverse)
 library(ggplot2)
+library(ggpubr) # For statistical brackets
+
+# 1. Data Loading ---------------------------------------------------------
+# exp_data to be used (generated from previous long-format processing)
+# exp_data <- read.delim('../data/GSE183947_long_format.txt', header = T)
 
 
-# data
-# dat.long to be used generated from previous demo
-# dat.long <- read.delim('../data/GSE183947_long_format.txt', header = T)
-
-#basic format for ggplot
-# ggplot(data, aes(x = variable, y = variable1)) +
-#   geom_col()
-
-# 1. barplot
-dat.long %>%
+# 2. Barplot: Expression per Sample ---------------------------------------
+exp_data %>%
   filter(gene == 'BRCA1') %>%
-  ggplot(., aes(x = samples, y = FPKM, fill = tissue)) +
-  geom_col()
+  ggplot(aes(x = samples, y = FPKM, fill = tissue)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "BRCA1 Expression per Sample", y = "Expression (FPKM)")
 
 
-# 2. density
-dat.long %>%
+# 3. Density Plot: Distribution by Tissue ---------------------------------
+exp_data %>%
   filter(gene == 'BRCA1') %>%
-  ggplot(., aes(x = FPKM, fill = tissue)) +
-  geom_density(alpha = 0.3)
+  ggplot(aes(x = FPKM, fill = tissue)) +
+  geom_density(alpha = 0.4) +
+  theme_classic() +
+  labs(title = "Distribution of BRCA1 Expression")
 
 
-# 3. boxplot 
-dat.long %>%
+# 4. Boxplot & Violin: Statistical Significance ---------------------------
+# Define comparisons for the brackets
+# Ensure these names match your data exactly (e.g., "yes" vs "no")
+stat_comparisons <- list( c("yes", "no") )
+
+exp_data %>%
   filter(gene == 'BRCA1') %>%
-  ggplot(., aes(x = metastasis, y = FPKM)) +
-  #geom_boxplot()
-  geom_violin()
+  ggplot(aes(x = metastasis, y = FPKM, fill = metastasis)) +
+  geom_violin(trim = FALSE, alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+  # Add p-values and brackets
+  stat_compare_means(comparisons = stat_comparisons, 
+                     method = "t.test", 
+                     label = "p.signif") + 
+  theme_bw() +
+  labs(title = "BRCA1 Expression: Metastasis Comparison",
+       x = "Metastasis Status",
+       y = "FPKM")
 
 
-# 4. scatterplot
-dat.long %>%
-  filter(gene == 'BRCA1' | gene == 'BRCA2') %>%
-  spread(key = gene, value = FPKM) %>%
-  ggplot(., aes(x = BRCA1, y = BRCA2, color = tissue)) +
-  geom_point() +
-  geom_smooth(method = 'lm', se = FALSE)
+
+# 5. Scatterplot: Gene Correlation ----------------------------------------
+exp_data %>%
+  filter(gene %in% c('BRCA1', 'BRCA2')) %>%
+  # Updated spread() to pivot_wider()
+  pivot_wider(names_from = gene, values_from = FPKM) %>%
+  ggplot(aes(x = BRCA1, y = BRCA2, color = tissue)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = 'lm', se = FALSE) +
+  theme_light() +
+  labs(title = "Correlation: BRCA1 vs BRCA2")
 
 
-# 5. heatmap
-genes.of.interest <- c('BRCA1', 'BRCA2', 'TP53', 'ALK', 'MYCN')
+# 6. Heatmap: Multiple Genes of Interest ----------------------------------
+target_genes <- c('BRCA1', 'BRCA2', 'TP53', 'ALK', 'MYCN')
 
-pdf("heatmap_save2.pdf", width = 10, height = 8)
-dat.long %>%
-  filter(gene %in% genes.of.interest) %>%
-  ggplot(., aes(x = samples, y = gene, fill = FPKM)) +
+# Save heatmap to PDF
+pdf("gene_expression_heatmap_updated.pdf", width = 10, height = 8)
+
+exp_data %>%
+  filter(gene %in% target_genes) %>%
+  ggplot(aes(x = samples, y = gene, fill = FPKM)) +
   geom_tile() +
-  scale_fill_gradient(low = 'white', high = 'red')
+  scale_fill_gradient(low = 'white', high = 'red') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  labs(title = "Gene Expression Heatmap", x = "Samples", y = "Gene")
 
 dev.off()
-
-#ggsave(p, filename = 'heatmap_save1.pdf', width = 10, height = 8)
-
