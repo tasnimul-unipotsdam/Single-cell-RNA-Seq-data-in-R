@@ -1,5 +1,5 @@
 # Single-cell RNA-Seq Analysis & Visualization in R
-This repository contains a comprehensive pipeline for processing single-cell RNA sequencing (scRNA-seq) data using Seurat and visualizing gene expression profiles across diverse conditions using Tidyverse.
+This repository contains a standardized pipeline for processing single-cell RNA sequencing (scRNA-seq) data using the **Seurat** framework and advanced gene expression visualization techniques.
 
 ## 1. Single-Cell Pipeline
 The singleCell_standard_workflow.R script performs:
